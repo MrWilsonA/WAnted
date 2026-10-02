@@ -1,0 +1,57 @@
+# Dependencies
+node_modules/
+
+# Build output and cache
+dist/
+build/
+coverage/
+.vite/
+*.tsbuildinfo
+
+# Environment and secret
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.pfx
+*.p12
+
+# Infrastructure as Code
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+!*.tfvars.example
+crash.log
+.azure/
+*.parameters.local.json
+
+# Docker and local data
+docker-compose.override.yml
+pgdata/
+.data/
+
+# Test and load test
+test-results/
+playwright-report/
+k6-results/
+
+# Log
+*.log
+npm-debug.log*
+logs/
+
+# Editor and OS
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# Personal working files and submission packages
+assets-raw/
+submission/
+*.zip
+tmp/
+.tmp/
