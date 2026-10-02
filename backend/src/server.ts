@@ -1,5 +1,6 @@
 import app from "./app";
 import { env } from "./config/env";
+import { pool } from "./lib/db";
 import { logger } from "./lib/logger";
 
 const server = app.listen(env.PORT, () => {
@@ -9,7 +10,8 @@ const server = app.listen(env.PORT, () => {
 function shutdown(signal: string) {
     logger.info(`${signal} received, closing server...`);
 
-    server.close(() => {
+    server.close(async () => {
+        await pool.end();
         logger.info("Server closed");
         process.exit(0);
     });

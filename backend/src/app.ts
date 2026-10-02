@@ -4,6 +4,7 @@ import cors from "cors";
 import pinoHttp from "pino-http";
 import { env } from "./config/env";
 import { logger } from "./lib/logger";
+import { pool } from "./lib/db";
 
 const app = express();
 
@@ -14,6 +15,16 @@ app.use(pinoHttp({ logger }));
 
 app.get("/health", (_req, res) => {
     res.json({ status: "ok" });
+});
+
+app.get("/health/ready", async (_req, res) => {
+    try {
+        await pool.query("select 1");
+        res.json({ status: "ready" });
+    } catch (err) {
+        logger.error(err, "Readiness check failed");
+        res.status(503).json({ status: "not ready" });
+    }
 });
 
 app.use((_req, res) => {
