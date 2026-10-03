@@ -1,0 +1,19 @@
+:root {
+    --room: #0d0b0a;
+    --room-soft: #1a1512;
+
+    --cork: #8f6236;
+    --paper: #e8d9b5;
+    --paper-aged: #d2b887;
+    --ink: #2a1a10;
+    --sticky-yellow: #f2dc6b;
+    --sticky-green: #bfdc93;
+    --card-white: #f1eee4;
+
+    --string: #b3262d;
+    --light: #ffcf7a;
+
+    --font-display: "Rye", serif;
+    --font-body: "Special Elite", monospace;
+    --font-hand: "Caveat", cursive;
+}
