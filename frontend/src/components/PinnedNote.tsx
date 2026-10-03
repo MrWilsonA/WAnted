@@ -16,12 +16,7 @@ export default function PinnedNote({ caseFile, placement, onOpen }: Props) {
     } as CSSProperties;
 
     return (
-        <button
-            type="button"
-            className={`note note--${placement.tone}`}
-            style={style}
-            onClick={() => onOpen(caseFile.slug)}
-        >
+        <button type="button" className="note" style={style} onClick={() => onOpen(caseFile.slug)}>
             <span className="pin" aria-hidden="true" />
             <span className="note__code">{caseFile.code}</span>
             <span className="note__title">{caseFile.title}</span>

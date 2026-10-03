@@ -3,11 +3,7 @@
     width: 100vw;
     height: 100vh;
     overflow: hidden;
-    background-color: var(--cork);
-    background-image:
-        radial-gradient(circle at 20% 30%, rgba(0, 0, 0, 0.18) 0 2px, transparent 3px),
-        radial-gradient(circle at 70% 60%, rgba(255, 255, 255, 0.1) 0 2px, transparent 3px);
-    background-size: 23px 23px, 37px 37px;
+    background: radial-gradient(ellipse at center, #1c1c20 0%, var(--bg) 75%);
 }
 
 .board__error {
@@ -15,44 +11,68 @@
     top: 1rem;
     left: 1rem;
     margin: 0;
+    color: var(--string);
+}
+
+.strings {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.string {
+    stroke: var(--string);
+    stroke-width: 1.5px;
+    stroke-opacity: 0.85;
+    vector-effect: non-scaling-stroke;
 }
 
 .pin {
     position: absolute;
-    top: 0.5rem;
+    top: 0;
     left: 50%;
-    width: 14px;
-    height: 14px;
-    margin-left: -7px;
+    z-index: 1;
+    width: 12px;
+    height: 12px;
+    translate: -50% -50%;
     border-radius: 50%;
-    background: radial-gradient(circle at 35% 35%, #ff8a80, var(--string) 60%, #5a0f13);
-    box-shadow: 0 3px 4px rgba(0, 0, 0, 0.5);
+    background: var(--string);
+    box-shadow: 3px 5px 5px rgba(0, 0, 0, 0.5);
+}
+
+.note,
+.poster {
+    position: absolute;
+    translate: -50% 0;
+    transform-origin: 50% 0;
+    background: var(--paper);
+    color: var(--ink);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.55);
 }
 
 .note {
-    position: absolute;
     width: 15%;
     min-width: 160px;
-    padding: 1.6rem 1rem 1rem;
+    padding: 1.4rem 1rem 1rem;
     border: 0;
     text-align: left;
-    color: var(--ink);
-    font-family: var(--font-hand);
+    font-family: var(--font);
     cursor: pointer;
-    transform: translate(-50%, -50%) rotate(var(--rotate));
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.35);
-    transition: transform 0.2s;
+    rotate: var(--rotate);
+    scale: 1;
+    transition: rotate 0.25s, scale 0.25s;
 }
 
 .note:hover,
 .note:focus-visible {
-    transform: translate(-50%, -50%) rotate(0deg) scale(1.06);
+    rotate: 0deg;
+    scale: 1.05;
     z-index: 2;
+    outline: none;
 }
-
-.note--yellow { background: var(--sticky-yellow); }
-.note--green { background: var(--sticky-green); }
-.note--white { background: var(--card-white); }
 
 .note__code,
 .note__title,
@@ -61,62 +81,56 @@
 }
 
 .note__code {
-    font-family: var(--font-body);
-    font-size: 0.8rem;
-    opacity: 0.7;
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--string);
 }
 
 .note__title {
-    font-size: 1.6rem;
-    line-height: 1.1;
+    margin-top: 0.3rem;
+    font-size: 1.05rem;
+    font-weight: 600;
+    line-height: 1.25;
 }
 
 .note__summary {
     margin-top: 0.4rem;
-    font-family: var(--font-body);
     font-size: 0.8rem;
+    line-height: 1.4;
+    color: var(--muted);
 }
 
 .poster {
-    position: absolute;
-    left: 50%;
-    top: 50%;
     display: flex;
     flex-direction: column;
-    width: 22%;
-    min-width: 220px;
+    width: 20%;
+    min-width: 200px;
     aspect-ratio: 4 / 5;
-    padding: 1.2rem 1rem 1rem;
-    transform: translate(-50%, -50%) rotate(1deg);
-    background: var(--paper);
-    border: 6px double var(--ink);
-    color: var(--ink);
+    padding: 1.4rem 1rem 1rem;
+    rotate: 1deg;
     text-align: center;
-    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.5);
 }
 
 .poster__title {
     margin: 0;
-    font-family: var(--font-display);
-    font-size: clamp(2rem, 4vw, 3.4rem);
+    font-size: clamp(1.6rem, 3vw, 2.6rem);
+    font-weight: 800;
+    letter-spacing: 0.2em;
     line-height: 1;
-}
-
-.poster__sub {
-    margin: 0.2rem 0 0.6rem;
-    font-size: 0.9rem;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
 }
 
 .poster__photo {
     flex: 1;
-    background: var(--paper-aged);
-    border: 3px solid var(--ink);
+    margin-top: 0.8rem;
+    background: #2a2a2e;
 }
 
 .poster__name {
-    margin: 0.6rem 0 0;
-    font-family: var(--font-display);
-    font-size: 1.3rem;
+    margin: 0.7rem 0 0;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
 }

@@ -1,15 +1,25 @@
-export interface NotePlacement {
+export interface Point {
     x: number;
     y: number;
-    rotate: number;
-    tone: "yellow" | "green" | "white";
 }
 
+export interface NotePlacement extends Point {
+    rotate: number;
+}
+
+export const poster: Point = { x: 50, y: 32 };
+
 export const placements: Record<string, NotePlacement> = {
-    "1a": { x: 17, y: 22, rotate: -3, tone: "yellow" },
-    "1b": { x: 50, y: 10, rotate: 2, tone: "white" },
-    "1c": { x: 83, y: 22, rotate: 4, tone: "green" },
-    "1d": { x: 17, y: 76, rotate: 3, tone: "green" },
-    "1e": { x: 50, y: 90, rotate: -2, tone: "yellow" },
-    "1f": { x: 83, y: 76, rotate: -4, tone: "white" },
+    "1a": { x: 16, y: 14, rotate: -4 },
+    "1b": { x: 50, y: 5, rotate: 2 },
+    "1c": { x: 84, y: 14, rotate: 5 },
+    "1d": { x: 16, y: 64, rotate: 3 },
+    "1e": { x: 50, y: 80, rotate: -2 },
+    "1f": { x: 84, y: 64, rotate: -5 },
 };
+
+export const strings: [string, string][] = [
+    ["poster", "1a"], ["poster", "1c"], ["poster", "1d"], ["poster", "1f"],
+    ["1a", "1b"], ["1b", "1c"], ["1d", "1e"], ["1e", "1f"], ["1b", "poster"], ["poster", "1e"],
+    ["1a", "1d"], ["1c", "1f"],
+];
