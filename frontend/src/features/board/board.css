@@ -82,9 +82,12 @@
 }
 
 .note {
-    width: 17cqw;
-    padding: 1.7cqw 1.4cqw 1.4cqw;
+    width: 15cqw;
+    min-height: 12cqw;
+    padding: 1.8cqw 1.4cqw 1.4cqw;
     border: 0;
+    border-bottom-right-radius: 2.5cqw 0.6cqw;
+    background: linear-gradient(170deg, var(--sticky), var(--sticky-dark));
     font: inherit;
     text-align: left;
     cursor: pointer;
@@ -113,7 +116,7 @@
     font-size: 0.75cqw;
     letter-spacing: 0.15em;
     text-transform: uppercase;
-    color: var(--red);
+    color: var(--red-ink);
 }
 
 .note__title {
@@ -124,10 +127,10 @@
 }
 
 .note__summary {
-    margin-top: 0.4cqw;
+    margin-top: 0.5cqw;
     font-size: 0.98cqw;
     line-height: 1.45;
-    color: var(--muted);
+    color: var(--sticky-ink);
 }
 
 .note--seen::after {
@@ -136,33 +139,128 @@
     top: 0.9cqw;
     right: 0.9cqw;
     padding: 0.1cqw 0.45cqw;
-    border: 0.12cqw solid var(--red);
+    border: 0.12cqw solid var(--red-ink);
     font-family: var(--mono);
     font-size: 0.62cqw;
     letter-spacing: 0.15em;
     text-transform: uppercase;
-    color: var(--red);
+    color: var(--red-ink);
     rotate: -8deg;
 }
 
 .clue {
-    width: 15cqw;
+    width: 14cqw;
     padding: 1.6cqw 1.3cqw 1.3cqw;
 }
 
 .clue__text {
     margin-top: 0.35cqw;
-    font-size: 1.2cqw;
+    font-size: 1.15cqw;
     font-weight: 600;
     line-height: 1.3;
 }
 
-.clue--quote {
-    width: 18cqw;
-    background: var(--paper-grey);
+.clue--tape {
+    width: auto;
+    padding: 0.6cqw 2cqw;
+    background: rgba(232, 226, 208, 0.92);
+    box-shadow: 0 0.4cqw 0.8cqw rgba(0, 0, 0, 0.4);
 }
 
-.clue--quote .clue__text {
+.clue--tape .clue__text {
+    margin: 0;
+    font-family: var(--mono);
+    font-size: 0.85cqw;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.clue--index {
+    padding-left: 2.4cqw;
+    background:
+        linear-gradient(90deg, transparent 1.6cqw, rgba(229, 40, 43, 0.45) 1.6cqw 1.7cqw, transparent 1.7cqw),
+        repeating-linear-gradient(transparent 0 1.45cqw, rgba(70, 120, 200, 0.25) 1.45cqw 1.52cqw),
+        #fbfbf8;
+}
+
+.clue--news {
+    background: #e6e3da;
+    font-family: var(--serif);
+}
+
+.clue--news .clue__label {
+    padding-bottom: 0.3cqw;
+    border-bottom: 0.15cqw double var(--ink);
+    font-family: var(--serif);
+    font-weight: 700;
+    color: var(--ink);
+}
+
+.clue--news .clue__text {
+    font-size: 1.35cqw;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.clue--photo {
+    width: 10cqw;
+    padding: 0.8cqw 0.8cqw 0.6cqw;
+    background: #f7f7f4;
+}
+
+.clue--photo img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    object-position: 50% 65%;
+    filter: grayscale(1) contrast(1.2);
+}
+
+.clue--photo .clue__text {
+    margin-top: 0.5cqw;
+    font-family: var(--mono);
+    font-size: 0.7cqw;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.clue--typed {
+    width: 12cqw;
+    font-family: var(--mono);
+}
+
+.clue--typed .clue__text {
+    font-size: 0.9cqw;
+    font-weight: 400;
+}
+
+.clue--grid,
+.clue--kraft {
+    width: 17cqw;
+}
+
+.clue--grid {
+    background:
+        linear-gradient(rgba(70, 120, 200, 0.16) 1px, transparent 1px) 0 0 / 1cqw 1cqw,
+        linear-gradient(90deg, rgba(70, 120, 200, 0.16) 1px, transparent 1px) 0 0 / 1cqw 1cqw,
+        #fafaf7;
+}
+
+.clue--kraft {
+    background: linear-gradient(160deg, #c19d74, #a8835b);
+    color: #2b1d10;
+}
+
+.clue--kraft .clue__label {
+    color: #5a1410;
+}
+
+.clue--grid .clue__text,
+.clue--kraft .clue__text {
     font-family: var(--serif);
     font-weight: 400;
     font-style: italic;
@@ -212,4 +310,3 @@
     text-transform: uppercase;
     color: var(--red);
 }
-

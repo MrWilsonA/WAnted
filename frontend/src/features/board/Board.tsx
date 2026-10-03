@@ -3,6 +3,7 @@ import { animate, createTimeline, stagger, svg } from "animejs";
 import { getCaseFiles } from "../../api/caseFiles";
 import PinnedNote from "../../components/PinnedNote";
 import WantedPoster from "../../components/WantedPoster";
+import photo from "../../assets/Wilson.jpg";
 import type { CaseFileSummary } from "../../types/caseFile";
 import CaseDesk from "./CaseDesk";
 import { anchors, clues, place, placements, poster, strings, type Point } from "./layout";
@@ -59,7 +60,7 @@ export default function Board() {
 
     useEffect(() => {
         const onKey = (e: KeyboardEvent) => {
-            if (!caseFiles.length) return;
+            if (!caseFiles.length || e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
             if (e.key === "Escape") setOpen(null);
             if (e.key === "ArrowRight") go(open === null ? 0 : Math.min(open + 1, caseFiles.length - 1));
             if (e.key === "ArrowLeft" && open !== null) go(Math.max(open - 1, 0));
@@ -103,12 +104,13 @@ export default function Board() {
                 {Object.entries(clues).map(([id, c]) => (
                     <div
                         key={id}
-                        className={`paper clue${c.quote ? " clue--quote" : ""}`}
+                        className={`paper clue clue--${c.kind}`}
                         style={place(c)}
                         onMouseEnter={() => trace(id)}
                         onMouseLeave={() => trace(null)}
                     >
-                        <span className="clue__label">{c.label}</span>
+                        {c.kind === "photo" && <img src={photo} alt="Wilson Arlando" />}
+                        {c.label && <span className="clue__label">{c.label}</span>}
                         <span className="clue__text">{c.text}</span>
                     </div>
                 ))}

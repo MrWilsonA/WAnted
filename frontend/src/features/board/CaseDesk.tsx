@@ -4,6 +4,7 @@ import { animate, createTimeline, stagger } from "animejs";
 import { getCaseFile } from "../../api/caseFiles";
 import photo from "../../assets/Wilson.jpg";
 import type { CaseFile, CaseFileSummary } from "../../types/caseFile";
+import Statements from "./Statements";
 import "./desk.css";
 
 interface Props {
@@ -56,10 +57,14 @@ export default function CaseDesk({ files, index, onGo, onClose }: Props) {
 
     useEffect(() => {
         const tl = createTimeline({ defaults: { ease: "outExpo" } })
-            .add(".sheet", { opacity: [0, 1], y: [140, 0], rotate: [-5, -0.6], duration: 800 })
-            .add(".prop", { opacity: [0, 1], scale: [1.4, 1], rotate: [-25, 0], duration: 900, delay: stagger(120) }, 150)
+            .add(".dossier", { opacity: [0, 1], y: [140, 0], rotate: [-5, -0.6], duration: 800 })
+            .add(
+                ".prop",
+                { opacity: [0, 1], scale: [1.4, 1], rotate: [-25, 0], duration: 900, delay: stagger(120) },
+                150,
+            )
             .add(".stamp", { opacity: [0, 0.9], scale: [3, 1], ease: "inQuad", duration: 300 }, 500)
-            .add(".sheet", { x: [{ to: -6 }, { to: 5 }, { to: -2 }, { to: 0 }], ease: "linear", duration: 280 });
+            .add(".dossier", { x: [{ to: -6 }, { to: 5 }, { to: -2 }, { to: 0 }], ease: "linear", duration: 280 });
         const sweep = animate(".prop--magnifier", {
             x: [0, -40],
             y: [0, 30],
@@ -84,11 +89,19 @@ export default function CaseDesk({ files, index, onGo, onClose }: Props) {
             onClick={(e) => e.target === e.currentTarget && onClose()}
         >
             {scene.photo && (
-                <figure key={`${summary.slug}-photo`} className="prop polaroid" onMouseEnter={(e) => wiggle(e.currentTarget)}>
+                <figure
+                    key={`${summary.slug}-photo`}
+                    className="prop polaroid"
+                    onMouseEnter={(e) => wiggle(e.currentTarget)}
+                >
                     <img src={photo} alt="Wilson Arlando" />
                     <figcaption>{scene.photo}</figcaption>
                 </figure>
             )}
+            <p key={`${summary.slug}-memo`} className="prop prop--memo" onMouseEnter={(e) => wiggle(e.currentTarget)}>
+                <span>Memo</span>
+                {summary.summary}
+            </p>
             {scene.props.map((p) => (
                 <div
                     key={`${summary.slug}-${p}`}
@@ -96,21 +109,31 @@ export default function CaseDesk({ files, index, onGo, onClose }: Props) {
                     onMouseEnter={(e) => wiggle(e.currentTarget)}
                 />
             ))}
-            <article className="sheet" key={summary.slug}>
-                <button
-                    type="button"
-                    className="stamp"
-                    onClick={(e) => animate(e.currentTarget, { scale: [3, 1], opacity: [0, 0.9], ease: "inQuad", duration: 300 })}
-                >
-                    {scene.stamp}
-                </button>
-                <header className="sheet__head">Case file {summary.code} · Wilson Arlando</header>
-                <h2 className="sheet__title">{summary.title}</h2>
-                <p className="sheet__summary">{summary.summary}</p>
-                <div className="sheet__body">
-                    {current ? <Markdown>{current.body}</Markdown> : <p>Retrieving evidence…</p>}
-                </div>
-            </article>
+            <div className="dossier" key={summary.slug}>
+                <span className="clip" aria-hidden="true" />
+                <article className="sheet">
+                    <button
+                        type="button"
+                        className="stamp"
+                        onClick={(e) =>
+                            animate(e.currentTarget, {
+                                scale: [3, 1],
+                                opacity: [0, 0.9],
+                                ease: "inQuad",
+                                duration: 300,
+                            })
+                        }
+                    >
+                        {scene.stamp}
+                    </button>
+                    <header className="sheet__head">Case file {summary.code} · Wilson Arlando</header>
+                    <h2 className="sheet__title">{summary.title}</h2>
+                    <div className="sheet__body">
+                        {current ? <Markdown>{current.body}</Markdown> : <p>Retrieving evidence…</p>}
+                    </div>
+                    <Statements slug={summary.slug} />
+                </article>
+            </div>
             <nav className="desk__nav">
                 <button type="button" disabled={index === 0} onClick={() => onGo(index - 1)}>
                     ← Prev

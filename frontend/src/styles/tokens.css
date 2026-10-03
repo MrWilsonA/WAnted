@@ -2,10 +2,13 @@
     --bg: #070708;
     --board: #151518;
     --paper: #f4f4f1;
-    --paper-grey: #dcdcd8;
     --ink: #151517;
     --muted: #66666b;
     --red: #e5282b;
+    --red-ink: #b3261e;
+    --sticky: #fbe78e;
+    --sticky-dark: #f1d35a;
+    --sticky-ink: #5e5021;
 
     --font: Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
     --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
