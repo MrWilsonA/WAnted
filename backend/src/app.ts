@@ -5,6 +5,8 @@ import pinoHttp from "pino-http";
 import { env } from "./config/env";
 import { logger } from "./lib/logger";
 import { prisma } from "./lib/prisma";
+import { caseFileRoutes } from "./routes/caseFileRoutes";
+import { errorHandler, notFoundHandler } from "./middleware/errorHandler";
 
 const app = express();
 
@@ -27,15 +29,9 @@ app.get("/health/ready", async (_req, res) => {
     }
 });
 
-app.use((_req, res) => {
-    res.status(404).json({ error: "Not found" });
-});
+app.use("/api/case-files", caseFileRoutes);
 
-app.use(
-    (err: Error, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
-        logger.error(err);
-        res.status(500).json({ error: "Internal server error" });
-    }
-);
+app.use(notFoundHandler);
+app.use(errorHandler);
 
 export default app;

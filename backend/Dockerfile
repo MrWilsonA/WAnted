@@ -2,7 +2,10 @@ FROM node:22-alpine AS build
 WORKDIR /app
 COPY package*.json ./
 RUN npm ci
-COPY tsconfig.json ./
+COPY tsconfig.json prisma.config.ts ./
+COPY prisma ./prisma
+
+RUN DATABASE_URL="postgresql://build:build@localhost:5432/build" npx prisma generate
 COPY src ./src
 RUN npm run build
 
