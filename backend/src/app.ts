@@ -4,7 +4,7 @@ import cors from "cors";
 import pinoHttp from "pino-http";
 import { env } from "./config/env";
 import { logger } from "./lib/logger";
-import { pool } from "./lib/db";
+import { prisma } from "./lib/prisma";
 
 const app = express();
 
@@ -19,7 +19,7 @@ app.get("/health", (_req, res) => {
 
 app.get("/health/ready", async (_req, res) => {
     try {
-        await pool.query("select 1");
+        await prisma.$queryRaw`SELECT 1`;
         res.json({ status: "ready" });
     } catch (err) {
         logger.error(err, "Readiness check failed");

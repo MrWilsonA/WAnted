@@ -1,0 +1,45 @@
+generator client {
+    provider     = "prisma-client"
+    output       = "../src/generated/prisma"
+    moduleFormat = "cjs"
+}
+
+datasource db {
+    provider = "postgresql"
+}
+
+model CaseFile {
+    id          Int         @id @default(autoincrement())
+    code        String      @unique
+    slug        String      @unique
+    position    Int
+    title       String
+    summary     String      @default("")
+    body        String      @default("")
+    updatedAt   DateTime    @updatedAt @map("updated_at")
+    testimonies Testimony[]
+
+    @@map("case_files")
+}
+
+model Testimony {
+    id         Int       @id @default(autoincrement())
+    caseFileId Int?      @map("case_file_id")
+    caseFile   CaseFile? @relation(fields: [caseFileId], references: [id], onDelete: SetNull)
+    name       String    @db.VarChar(60)
+    message    String    @db.VarChar(500)
+    visible    Boolean   @default(true)
+    createdAt  DateTime  @default(now()) @map("created_at")
+
+    @@index([caseFileId])
+    @@map("testimonies")
+}
+
+model Admin {
+    id           Int      @id @default(autoincrement())
+    email        String   @unique
+    passwordHash String   @map("password_hash")
+    createdAt    DateTime @default(now()) @map("created_at")
+
+    @@map("admins")
+}

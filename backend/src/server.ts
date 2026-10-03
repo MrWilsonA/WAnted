@@ -1,7 +1,7 @@
 import app from "./app";
 import { env } from "./config/env";
-import { pool } from "./lib/db";
 import { logger } from "./lib/logger";
+import { prisma } from "./lib/prisma";
 
 const server = app.listen(env.PORT, () => {
     logger.info(`API running on port ${env.PORT}`);
@@ -11,7 +11,7 @@ function shutdown(signal: string) {
     logger.info(`${signal} received, closing server...`);
 
     server.close(async () => {
-        await pool.end();
+        await prisma.$disconnect();
         logger.info("Server closed");
         process.exit(0);
     });
