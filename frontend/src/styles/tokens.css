@@ -1,10 +1,13 @@
 :root {
-    --bg: #0c0c0e;
+    --bg: #070708;
+    --board: #151518;
     --paper: #f4f4f1;
+    --paper-grey: #dcdcd8;
     --ink: #151517;
-    --muted: #6b6b70;
-    --string: #e5282b;
+    --muted: #66666b;
+    --red: #e5282b;
 
     --font: Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
     --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    --serif: Georgia, "Times New Roman", serif;
 }

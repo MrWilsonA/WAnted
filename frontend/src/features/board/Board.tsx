@@ -1,70 +1,128 @@
 import { useEffect, useState } from "react";
-import { animate, stagger } from "animejs";
+import { createTimeline, stagger, svg } from "animejs";
 import { getCaseFiles } from "../../api/caseFiles";
 import PinnedNote from "../../components/PinnedNote";
 import WantedPoster from "../../components/WantedPoster";
 import type { CaseFileSummary } from "../../types/caseFile";
-import { placements, poster, strings } from "./layout";
+import CaseDesk from "./CaseDesk";
+import { clues, place, placements, poster, strings, type Placement } from "./layout";
 import "./board.css";
 
-const points = { poster, ...placements } as Record<string, { x: number; y: number }>;
+const points: Record<string, Placement> = { poster, ...placements, ...clues };
 
 export default function Board() {
-    const [caseFiles, setCaseFiles] = useState<CaseFileSummary[]>([]);
+    const [loaded, setLoaded] = useState<CaseFileSummary[] | null>(null);
     const [error, setError] = useState<string | null>(null);
+    const caseFiles = loaded ?? [];
+    const [open, setOpen] = useState<number | null>(null);
+    const [seen, setSeen] = useState<number[]>([]);
+    const ready = loaded !== null || error !== null;
+
+    const go = (i: number) => {
+        setOpen(i);
+        setSeen((s) => [...s, i]);
+    };
 
     useEffect(() => {
         getCaseFiles()
-            .then(setCaseFiles)
+            .then(setLoaded)
             .catch((err: Error) => setError(err.message));
     }, []);
 
     useEffect(() => {
-        if (!caseFiles.length) return;
-        const notes = animate(".note", { opacity: [0, 1], y: [16, 0], delay: stagger(90) });
-        const lines = animate(".string", {
-            opacity: [0, 1],
-            delay: stagger(70, { start: 400 }),
-            duration: 700,
-        });
+        if (!ready) return;
+        const tl = createTimeline({ defaults: { ease: "outExpo", duration: 700 } })
+            .add(".poster", { opacity: [0, 1], y: [-60, 0], scale: [1.15, 1] })
+            .add(".note, .clue", { opacity: [0, 1], y: [-40, 0], scale: [1.1, 1], delay: stagger(70) }, "-=450")
+            .add(".pin", { opacity: [0, 1], scale: [0, 1], ease: "outBack(3)", duration: 400, delay: stagger(40) }, "-=300")
+            .add(
+                svg.createDrawable(".string"),
+                { opacity: [0, 1], draw: ["0 0", "0 1"], ease: "inOutQuad", duration: 900, delay: stagger(60) },
+                "-=200",
+            );
         return () => {
-            notes.revert();
-            lines.revert();
+            tl.revert();
         };
-    }, [caseFiles]);
+    }, [ready]);
 
-    const loaded = new Set(caseFiles.map((c) => c.code));
+    useEffect(() => {
+        const onKey = (e: KeyboardEvent) => {
+            if (!caseFiles.length) return;
+            if (e.key === "Escape") setOpen(null);
+            if (e.key === "ArrowRight") go(open === null ? 0 : Math.min(open + 1, caseFiles.length - 1));
+            if (e.key === "ArrowLeft" && open !== null) go(Math.max(open - 1, 0));
+        };
+        window.addEventListener("keydown", onKey);
+        return () => window.removeEventListener("keydown", onKey);
+    });
+
+    const shown = ["poster", ...Object.keys(clues), ...caseFiles.map((c) => c.code).filter((c) => placements[c])];
+    const at = (k: string) => ({ x: points[k].x * 1.6, y: points[k].y * 0.9 });
 
     return (
         <main className="board">
-            <svg className="strings" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-                {strings
-                    .filter(([a, b]) => [a, b].every((k) => k === "poster" || loaded.has(k)))
-                    .map(([a, b]) => (
-                        <line
-                            key={`${a}-${b}`}
-                            className="string"
-                            x1={points[a].x}
-                            y1={points[a].y}
-                            x2={points[b].x}
-                            y2={points[b].y}
-                        />
-                    ))}
-            </svg>
-            <WantedPoster />
-            {error && <p className="board__error">Failed to load: {error}</p>}
-            {caseFiles.map((c) => {
-                const placement = placements[c.code];
-                if (!placement) return null;
-                return (
-                    <PinnedNote
-                        key={c.code}
-                        caseFile={c}
-                        placement={placement}
-                        onOpen={(slug) => console.log("open", slug)}
-                    />
-                );
-            })}
+            <div
+                className="stage"
+                onPointerMove={(e) => {
+                    const r = e.currentTarget.getBoundingClientRect();
+                    e.currentTarget.style.setProperty("--mx", `${e.clientX - r.left}px`);
+                    e.currentTarget.style.setProperty("--my", `${e.clientY - r.top}px`);
+                }}
+            >
+                <WantedPoster />
+                {caseFiles.map(
+                    (c, i) =>
+                        placements[c.code] && (
+                            <PinnedNote
+                                key={c.code}
+                                caseFile={c}
+                                placement={placements[c.code]}
+                                seen={seen.includes(i)}
+                                onOpen={() => go(i)}
+                            />
+                        ),
+                )}
+                {Object.entries(clues).map(([id, c]) => (
+                    <div key={id} className={`paper clue${c.quote ? " clue--quote" : ""}`} style={place(c)}>
+                        <span className="clue__label">{c.label}</span>
+                        <span className="clue__text">{c.text}</span>
+                    </div>
+                ))}
+                <svg className="strings" viewBox="0 0 160 90" aria-hidden="true">
+                    <defs>
+                        <radialGradient id="pin" cx="35%" cy="35%">
+                            <stop offset="0" stopColor="#ff9d9d" />
+                            <stop offset="0.5" stopColor="#e5282b" />
+                            <stop offset="1" stopColor="#6e0c0f" />
+                        </radialGradient>
+                        <filter id="shadow" filterUnits="userSpaceOnUse" x="0" y="0" width="160" height="90">
+                            <feDropShadow dx="0.3" dy="0.5" stdDeviation="0.3" floodOpacity="0.6" />
+                        </filter>
+                    </defs>
+                    <g filter="url(#shadow)">
+                        {strings
+                            .filter(([a, b]) => shown.includes(a) && shown.includes(b))
+                            .map(([a, b]) => (
+                                <line
+                                    key={`${a}-${b}`}
+                                    className="string"
+                                    x1={at(a).x}
+                                    y1={at(a).y}
+                                    x2={at(b).x}
+                                    y2={at(b).y}
+                                />
+                            ))}
+                        {shown.map((k) => (
+                            <circle key={k} className="pin" cx={at(k).x} cy={at(k).y} r="0.65" fill="url(#pin)" />
+                        ))}
+                    </g>
+                </svg>
+                {error && <p className="board__error">Failed to load case files: {error}</p>}
+                <p className="stage__footer">Case 27-1 · Game Development · Click a file or press →</p>
+            </div>
+            {open !== null && (
+                <CaseDesk files={caseFiles} index={open} onGo={go} onClose={() => setOpen(null)} />
+            )}
         </main>
     );
 }

@@ -1,15 +1,13 @@
-import type { CSSProperties } from "react";
-import { poster } from "../features/board/layout";
+import photo from "../assets/Wilson.jpg";
+import { place, poster } from "../features/board/layout";
 
 export default function WantedPoster() {
-    const style = { left: `${poster.x}%`, top: `${poster.y}%` } as CSSProperties;
-
     return (
-        <article className="poster" style={style} aria-label="Wanted poster of Wilson Arlando">
-            <span className="pin" aria-hidden="true" />
+        <article className="paper poster" style={place(poster)} aria-label="Wanted poster of Wilson Arlando">
             <h1 className="poster__title">WANTED</h1>
-            <div className="poster__photo" />
+            <img className="poster__photo" src={photo} alt="Wilson Arlando" />
             <p className="poster__name">Wilson Arlando</p>
+            <p className="poster__reward">Laboratory Assistant · Case 27-1</p>
         </article>
     );
 }
