@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
-import { createTimeline, stagger, svg } from "animejs";
+import { animate, createTimeline, stagger, svg } from "animejs";
 import { getCaseFiles } from "../../api/caseFiles";
 import PinnedNote from "../../components/PinnedNote";
 import WantedPoster from "../../components/WantedPoster";
 import type { CaseFileSummary } from "../../types/caseFile";
 import CaseDesk from "./CaseDesk";
-import { clues, place, placements, poster, strings, type Placement } from "./layout";
+import { anchors, clues, place, placements, poster, strings, type Point } from "./layout";
 import "./board.css";
 
-const points: Record<string, Placement> = { poster, ...placements, ...clues };
+const points: Record<string, Point> = { poster, ...placements, ...clues, ...anchors };
 
 export default function Board() {
     const [loaded, setLoaded] = useState<CaseFileSummary[] | null>(null);
@@ -16,11 +16,23 @@ export default function Board() {
     const caseFiles = loaded ?? [];
     const [open, setOpen] = useState<number | null>(null);
     const [seen, setSeen] = useState<number[]>([]);
+    const [hot, setHot] = useState<string | null>(null);
     const ready = loaded !== null || error !== null;
 
     const go = (i: number) => {
         setOpen(i);
         setSeen((s) => [...s, i]);
+    };
+
+    const trace = (key: string | null) => {
+        setHot(key);
+        if (!key) return;
+        animate(svg.createDrawable(`.string[data-a="${key}"], .string[data-b="${key}"]`), {
+            draw: ["0 0", "0 1"],
+            duration: 600,
+            ease: "outQuad",
+        });
+        animate(`.pin[data-key="${key}"]`, { scale: [{ to: 1.8 }, { to: 1 }], duration: 500 });
     };
 
     useEffect(() => {
@@ -34,10 +46,10 @@ export default function Board() {
         const tl = createTimeline({ defaults: { ease: "outExpo", duration: 700 } })
             .add(".poster", { opacity: [0, 1], y: [-60, 0], scale: [1.15, 1] })
             .add(".note, .clue", { opacity: [0, 1], y: [-40, 0], scale: [1.1, 1], delay: stagger(70) }, "-=450")
-            .add(".pin", { opacity: [0, 1], scale: [0, 1], ease: "outBack(3)", duration: 400, delay: stagger(40) }, "-=300")
+            .add(".pin", { opacity: [0, 1], scale: [0, 1], ease: "outBack(3)", duration: 400, delay: stagger(30) }, "-=300")
             .add(
                 svg.createDrawable(".string"),
-                { opacity: [0, 1], draw: ["0 0", "0 1"], ease: "inOutQuad", duration: 900, delay: stagger(60) },
+                { opacity: [0, 1], draw: ["0 0", "0 1"], ease: "inOutQuad", duration: 900, delay: stagger(35) },
                 "-=200",
             );
         return () => {
@@ -56,7 +68,12 @@ export default function Board() {
         return () => window.removeEventListener("keydown", onKey);
     });
 
-    const shown = ["poster", ...Object.keys(clues), ...caseFiles.map((c) => c.code).filter((c) => placements[c])];
+    const shown = [
+        "poster",
+        ...Object.keys(clues),
+        ...Object.keys(anchors),
+        ...caseFiles.map((c) => c.code).filter((c) => placements[c]),
+    ];
     const at = (k: string) => ({ x: points[k].x * 1.6, y: points[k].y * 0.9 });
 
     return (
@@ -79,16 +96,23 @@ export default function Board() {
                                 placement={placements[c.code]}
                                 seen={seen.includes(i)}
                                 onOpen={() => go(i)}
+                                onHover={(on) => trace(on ? c.code : null)}
                             />
                         ),
                 )}
                 {Object.entries(clues).map(([id, c]) => (
-                    <div key={id} className={`paper clue${c.quote ? " clue--quote" : ""}`} style={place(c)}>
+                    <div
+                        key={id}
+                        className={`paper clue${c.quote ? " clue--quote" : ""}`}
+                        style={place(c)}
+                        onMouseEnter={() => trace(id)}
+                        onMouseLeave={() => trace(null)}
+                    >
                         <span className="clue__label">{c.label}</span>
                         <span className="clue__text">{c.text}</span>
                     </div>
                 ))}
-                <svg className="strings" viewBox="0 0 160 90" aria-hidden="true">
+                <svg className={`strings${hot ? " strings--focus" : ""}`} viewBox="0 0 160 90" aria-hidden="true">
                     <defs>
                         <radialGradient id="pin" cx="35%" cy="35%">
                             <stop offset="0" stopColor="#ff9d9d" />
@@ -105,7 +129,9 @@ export default function Board() {
                             .map(([a, b]) => (
                                 <line
                                     key={`${a}-${b}`}
-                                    className="string"
+                                    className={`string${hot === a || hot === b ? " string--hot" : ""}`}
+                                    data-a={a}
+                                    data-b={b}
                                     x1={at(a).x}
                                     y1={at(a).y}
                                     x2={at(b).x}
@@ -113,12 +139,19 @@ export default function Board() {
                                 />
                             ))}
                         {shown.map((k) => (
-                            <circle key={k} className="pin" cx={at(k).x} cy={at(k).y} r="0.65" fill="url(#pin)" />
+                            <circle
+                                key={k}
+                                className="pin"
+                                data-key={k}
+                                cx={at(k).x}
+                                cy={at(k).y}
+                                r="0.8"
+                                fill="url(#pin)"
+                            />
                         ))}
                     </g>
                 </svg>
                 {error && <p className="board__error">Failed to load case files: {error}</p>}
-                <p className="stage__footer">Case 27-1 · Game Development · Click a file or press →</p>
             </div>
             {open !== null && (
                 <CaseDesk files={caseFiles} index={open} onGo={go} onClose={() => setOpen(null)} />

@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import Markdown from "react-markdown";
-import { createTimeline } from "animejs";
+import { animate, createTimeline, stagger } from "animejs";
 import { getCaseFile } from "../../api/caseFiles";
 import photo from "../../assets/Wilson.jpg";
 import type { CaseFile, CaseFileSummary } from "../../types/caseFile";
+import "./desk.css";
 
 interface Props {
     files: CaseFileSummary[];
@@ -12,10 +13,29 @@ interface Props {
     onClose: () => void;
 }
 
+interface Scene {
+    stamp: string;
+    photo?: string;
+    props: string[];
+}
+
+const scenes: Record<string, Scene> = {
+    "1a": { stamp: "Identified", photo: "Suspect #01", props: ["cup"] },
+    "1b": { stamp: "Evidence", props: ["magnifier", "pencil"] },
+    "1c": { stamp: "Planned", props: ["pencil", "cup"] },
+    "1d": { stamp: "New lead", props: ["magnifier"] },
+    "1e": { stamp: "Cold case", props: ["cup", "pencil"] },
+    "1f": { stamp: "Accepted", photo: "Case closed", props: ["pencil"] },
+};
+
 const pad = (n: number) => String(n).padStart(2, "0");
+
+const wiggle = (el: Element) =>
+    animate(el, { rotate: [{ to: 8 }, { to: -5 }, { to: 0 }], duration: 500, ease: "outQuad" });
 
 export default function CaseDesk({ files, index, onGo, onClose }: Props) {
     const summary = files[index];
+    const scene = scenes[summary.code] ?? { stamp: "Confidential", props: [] };
     const [file, setFile] = useState<CaseFile | null>(null);
     const current = file?.slug === summary.slug ? file : null;
 
@@ -28,38 +48,62 @@ export default function CaseDesk({ files, index, onGo, onClose }: Props) {
     }, [summary]);
 
     useEffect(() => {
-        const tl = createTimeline()
-            .add(".desk", { opacity: [0, 1], duration: 400, ease: "outQuad" })
-            .add(".polaroid", { opacity: [0, 1], x: [-200, 0], rotate: [-35, -8], duration: 1000, ease: "outExpo" }, 150);
+        const fade = animate(".desk", { opacity: [0, 1], duration: 400, ease: "outQuad" });
         return () => {
-            tl.revert();
+            fade.revert();
         };
     }, []);
 
     useEffect(() => {
         const tl = createTimeline({ defaults: { ease: "outExpo" } })
             .add(".sheet", { opacity: [0, 1], y: [140, 0], rotate: [-5, -0.6], duration: 800 })
-            .add(".stamp", { opacity: [0, 0.9], scale: [3, 1], ease: "inQuad", duration: 300 }, "-=400")
+            .add(".prop", { opacity: [0, 1], scale: [1.4, 1], rotate: [-25, 0], duration: 900, delay: stagger(120) }, 150)
+            .add(".stamp", { opacity: [0, 0.9], scale: [3, 1], ease: "inQuad", duration: 300 }, 500)
             .add(".sheet", { x: [{ to: -6 }, { to: 5 }, { to: -2 }, { to: 0 }], ease: "linear", duration: 280 });
+        const sweep = animate(".prop--magnifier", {
+            x: [0, -40],
+            y: [0, 30],
+            duration: 2600,
+            delay: 1200,
+            ease: "inOutSine",
+            loop: true,
+            alternate: true,
+        });
         return () => {
             tl.revert();
+            sweep.revert();
         };
     }, [summary.slug]);
 
     return (
         <div
-            className="desk"
+            className={`desk desk--${summary.code}`}
             role="dialog"
             aria-modal="true"
             aria-label={summary.title}
             onClick={(e) => e.target === e.currentTarget && onClose()}
         >
-            <figure className="polaroid">
-                <img src={photo} alt="Wilson Arlando" />
-                <figcaption>Suspect #01</figcaption>
-            </figure>
+            {scene.photo && (
+                <figure key={`${summary.slug}-photo`} className="prop polaroid" onMouseEnter={(e) => wiggle(e.currentTarget)}>
+                    <img src={photo} alt="Wilson Arlando" />
+                    <figcaption>{scene.photo}</figcaption>
+                </figure>
+            )}
+            {scene.props.map((p) => (
+                <div
+                    key={`${summary.slug}-${p}`}
+                    className={`prop prop--${p}`}
+                    onMouseEnter={(e) => wiggle(e.currentTarget)}
+                />
+            ))}
             <article className="sheet" key={summary.slug}>
-                <span className="stamp">Confidential</span>
+                <button
+                    type="button"
+                    className="stamp"
+                    onClick={(e) => animate(e.currentTarget, { scale: [3, 1], opacity: [0, 0.9], ease: "inQuad", duration: 300 })}
+                >
+                    {scene.stamp}
+                </button>
                 <header className="sheet__head">Case file {summary.code} · Wilson Arlando</header>
                 <h2 className="sheet__title">{summary.title}</h2>
                 <p className="sheet__summary">{summary.summary}</p>
