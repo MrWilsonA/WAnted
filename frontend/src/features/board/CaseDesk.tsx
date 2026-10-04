@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Markdown from "react-markdown";
 import { animate, createTimeline, stagger } from "animejs";
 import { getCaseFile } from "../../api/caseFiles";
+import pages from "../../assets/Pages.mp3";
 import photo from "../../assets/Wilson.jpg";
 import type { CaseFile, CaseFileSummary } from "../../types/caseFile";
 import Statements from "./Statements";
@@ -28,6 +29,8 @@ const scenes: Record<string, Scene> = {
     "1e": { stamp: "Cold case", props: ["cup", "pencil"] },
     "1f": { stamp: "Accepted", photo: "Case closed", props: ["pencil"] },
 };
+
+const pageSound = new Audio(pages);
 
 const pad = (n: number) => String(n).padStart(2, "0");
 
@@ -56,6 +59,8 @@ export default function CaseDesk({ files, index, onGo, onClose }: Props) {
     }, []);
 
     useEffect(() => {
+        pageSound.currentTime = 0;
+        pageSound.play().catch(() => {});
         const tl = createTimeline({ defaults: { ease: "outExpo" } })
             .add(".dossier", { opacity: [0, 1], y: [140, 0], rotate: [-5, -0.6], duration: 800 })
             .add(

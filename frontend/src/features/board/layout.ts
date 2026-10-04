@@ -30,7 +30,7 @@ export const placements: Record<string, Placement> = {
 };
 
 export const clues: Record<string, Clue> = {
-    label: { x: 50, y: 8, rotate: -2, kind: "tape", text: "Case 27-1 · Game Development" },
+    label: { x: 50, y: 8, rotate: -2, kind: "tape", text: "Case 27-1 - New AstDev" },
     major: { x: 30, y: 5, rotate: 3, kind: "index", label: "Major", text: "Computer Science & Mathematics" },
     target: { x: 70, y: 5, rotate: -3, kind: "news", label: "The Lab Gazette", text: "Wanted: Assistant Development Officer" },
     photo: { x: 12, y: 35, rotate: -6, kind: "photo", text: "Last seen: the lab" },
