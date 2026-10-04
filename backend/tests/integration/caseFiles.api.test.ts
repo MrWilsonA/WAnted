@@ -54,6 +54,15 @@ describe("API", () => {
         expect(res.body).toEqual({ error: "Case file not found" });
     });
 
+    it("answers 400 for malformed JSON", async () => {
+        const res = await request(app)
+            .post("/api/case-files/evidence/testimonies")
+            .set("Content-Type", "application/json")
+            .send("{bad");
+
+        expect(res.status).toBe(400);
+    });
+
     it("answers 404 for a route that does not exist", async () => {
         const res = await request(app).get("/api/unknown");
 
