@@ -20,3 +20,9 @@ variable "environment" {
   description = "Environment name used in resource names."
   default     = "prod"
 }
+
+variable "unique_suffix" {
+  type        = string
+  description = "Suffix that makes globally unique names (registry, key vault)."
+  default     = "890890"
+}
