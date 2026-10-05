@@ -53,8 +53,8 @@ jobs:
           RUNNER_IP=$(curl -s https://api.ipify.org)
           az postgres flexible-server firewall-rule create \
             --resource-group "$RESOURCE_GROUP" \
-            --name "$POSTGRES_SERVER" \
-            --rule-name ci-runner \
+            --server-name "$POSTGRES_SERVER" \
+            --name ci-runner \
             --start-ip-address "$RUNNER_IP" \
             --end-ip-address "$RUNNER_IP"
           sleep 30
@@ -73,9 +73,9 @@ jobs:
         run: |
           az postgres flexible-server firewall-rule delete \
             --resource-group "$RESOURCE_GROUP" \
-            --name "$POSTGRES_SERVER" \
-            --rule-name ci-runner \
-            --yes || true
+            --server-name "$POSTGRES_SERVER" \
+            --name ci-runner \
+            --yes
 
       - name: Update backend to the new image
         run: |
