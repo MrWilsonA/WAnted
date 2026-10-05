@@ -26,3 +26,15 @@ variable "unique_suffix" {
   description = "Suffix that makes globally unique names (registry, key vault)."
   default     = "890890"
 }
+
+variable "db_admin_login" {
+  type        = string
+  description = "PostgreSQL administrator login."
+  default     = "wantedadmin"
+}
+
+variable "client_ip" {
+  type        = string
+  description = "Public IP of the developer machine allowed through the DB firewall. Empty means no rule."
+  default     = ""
+}
