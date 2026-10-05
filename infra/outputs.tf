@@ -17,3 +17,11 @@ output "api_url" {
 output "web_url" {
   value = "https://${azurerm_static_web_app.web.default_host_name}"
 }
+
+output "deploy_client_id" {
+  value = azurerm_user_assigned_identity.deploy.client_id
+}
+
+output "tenant_id" {
+  value = data.azurerm_client_config.current.tenant_id
+}

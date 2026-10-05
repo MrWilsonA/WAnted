@@ -38,3 +38,9 @@ variable "client_ip" {
   description = "Public IP of the developer machine allowed through the DB firewall. Empty means no rule."
   default     = ""
 }
+
+variable "github_repo" {
+  description = "GitHub repository allowed to deploy, in owner/name format"
+  type        = string
+  default     = "MrWilsonA/WAnted"
+}
