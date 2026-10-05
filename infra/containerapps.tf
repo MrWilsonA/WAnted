@@ -41,6 +41,10 @@ resource "azurerm_static_web_app" "web" {
   sku_tier            = "Free"
   sku_size            = "Free"
   tags                = local.tags
+
+  lifecycle {
+    ignore_changes = [repository_url, repository_branch]
+  }
 }
 
 resource "azurerm_container_app" "api" {
