@@ -59,7 +59,7 @@ resource "azurerm_key_vault_secret" "db_password" {
 
 resource "azurerm_key_vault_secret" "database_url" {
   name         = "database-url"
-  value        = "postgresql://${var.db_admin_login}:${random_password.db_admin.result}@${azurerm_postgresql_flexible_server.main.fqdn}:5432/${azurerm_postgresql_flexible_server_database.wanted.name}?sslmode=require"
+  value        = "postgresql://${var.db_admin_login}:${random_password.db_admin.result}@${azurerm_postgresql_flexible_server.main.fqdn}:5432/${azurerm_postgresql_flexible_server_database.wanted.name}?sslmode=verify-full"
   key_vault_id = azurerm_key_vault.main.id
 
   depends_on = [azurerm_role_assignment.me_kv_secrets_officer]
