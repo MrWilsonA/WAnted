@@ -73,6 +73,12 @@ resource "azurerm_container_app" "api" {
     identity            = azurerm_user_assigned_identity.app.id
   }
 
+  secret {
+    name                = "appinsights-connection-string"
+    key_vault_secret_id = azurerm_key_vault_secret.appinsights_connection_string.versionless_id
+    identity            = azurerm_user_assigned_identity.app.id
+  }
+
   ingress {
     external_enabled = true
     target_port      = 3000
@@ -112,6 +118,10 @@ resource "azurerm_container_app" "api" {
       env {
         name        = "DATABASE_URL"
         secret_name = "database-url"
+      }
+      env {
+        name        = "APPLICATIONINSIGHTS_CONNECTION_STRING"
+        secret_name = "appinsights-connection-string"
       }
 
       liveness_probe {
