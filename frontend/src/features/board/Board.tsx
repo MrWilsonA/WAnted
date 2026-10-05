@@ -14,6 +14,7 @@ const points: Record<string, Point> = { poster, ...placements, ...clues, ...anch
 export default function Board() {
     const [loaded, setLoaded] = useState<CaseFileSummary[] | null>(null);
     const [error, setError] = useState<string | null>(null);
+    const [attempt, setAttempt] = useState(0);
     const caseFiles = loaded ?? [];
     const [open, setOpen] = useState<number | null>(null);
     const [seen, setSeen] = useState<number[]>([]);
@@ -37,10 +38,18 @@ export default function Board() {
     };
 
     useEffect(() => {
+        let retry: number | undefined;
         getCaseFiles()
-            .then(setLoaded)
-            .catch((err: Error) => setError(err.message));
-    }, []);
+            .then((files) => {
+                setLoaded(files);
+                setError(null);
+            })
+            .catch((err: Error) => {
+                setError(err.message);
+                retry = window.setTimeout(() => setAttempt((a) => a + 1), 3000);
+            });
+        return () => window.clearTimeout(retry);
+    }, [attempt]);
 
     useEffect(() => {
         if (!ready) return;
@@ -56,7 +65,7 @@ export default function Board() {
         return () => {
             tl.revert();
         };
-    }, [ready]);
+    }, [ready, loaded]);
 
     useEffect(() => {
         const onKey = (e: KeyboardEvent) => {
@@ -153,7 +162,7 @@ export default function Board() {
                         ))}
                     </g>
                 </svg>
-                {error && <p className="board__error">Failed to load case files: {error}</p>}
+                {error && <p className="board__error">Case files unavailable ({error}). Reconnecting…</p>}
             </div>
             {open !== null && (
                 <CaseDesk files={caseFiles} index={open} onGo={go} onClose={() => setOpen(null)} />

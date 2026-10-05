@@ -320,7 +320,7 @@ Wilson should be accepted because he can contribute more than effort.
 
 He brings responsibility, adaptability, research interest, broad technical awareness, and genuine concern for assistant development.
 
-> Every assistant should be able to explain what they built, why they built it, and how it works.
+> In every aspect always prepare for the worst and hope for the best
 `,
     },
 ];

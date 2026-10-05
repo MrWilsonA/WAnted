@@ -44,7 +44,7 @@ export const clues: Record<string, Clue> = {
     },
     exhibitB: {
         x: 71, y: 72, rotate: 3, kind: "kraft", label: "Exhibit B",
-        text: "“Every assistant should be able to explain what they built, why they built it, and how it works.”",
+        text: "“In every aspect always prepare for the worst and hope for the best.”",
     },
     modus: { x: 50, y: 80, rotate: 2, kind: "typed", label: "Modus operandi", text: "Notes, reminders, references. Start early." },
 };
