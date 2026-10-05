@@ -44,3 +44,8 @@ variable "github_repo" {
   type        = string
   default     = "MrWilsonA@211006267/WAnted@1401770372"
 }
+
+variable "alert_email" {
+  description = "Email address that receives monitoring alerts"
+  type        = string
+}
