@@ -40,7 +40,7 @@ variable "client_ip" {
 }
 
 variable "github_repo" {
-  description = "GitHub repository allowed to deploy, in owner/name format"
+  description = "Repository as it appears in the GitHub OIDC subject claim (owner@id/name@id)"
   type        = string
-  default     = "MrWilsonA/WAnted"
+  default     = "MrWilsonA@211006267/WAnted@1401770372"
 }
