@@ -437,3 +437,43 @@
         display: none;
     }
 }
+
+@media (max-width: 760px) {
+    .desk {
+        padding: 16px 12px 88px;
+    }
+
+    .sheet {
+        max-height: calc(100vh - 110px);
+        padding: 44px 22px 32px;
+    }
+
+    .sheet__title {
+        font-size: 32px;
+    }
+
+    .sheet__body {
+        font-size: 16px;
+    }
+
+    .stamp {
+        top: 16px;
+        right: 16px;
+        font-size: 12px;
+    }
+
+    .clip {
+        left: 24px;
+    }
+
+    .desk__nav {
+        bottom: 16px;
+        gap: 8px;
+        font-size: 11px;
+        letter-spacing: 0.1em;
+    }
+
+    .desk__nav button {
+        padding: 10px 14px;
+    }
+}
