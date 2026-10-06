@@ -18,3 +18,11 @@ resource "azurerm_application_insights" "main" {
   application_type    = "web"
   tags                = local.tags
 }
+
+resource "azurerm_key_vault_secret" "appinsights_connection_string" {
+  name         = "appinsights-connection-string"
+  value        = azurerm_application_insights.main.connection_string
+  key_vault_id = azurerm_key_vault.main.id
+
+  depends_on = [azurerm_role_assignment.me_kv_secrets_officer]
+}
