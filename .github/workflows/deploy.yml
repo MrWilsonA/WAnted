@@ -63,7 +63,7 @@ jobs:
             --end-ip-address "$RUNNER_IP"
           sleep 30
 
-      - name: Run database migrations
+      - name: Run database migrations and seed
         working-directory: backend
         run: |
           DATABASE_URL=$(az keyvault secret show --vault-name "$KEY_VAULT" --name database-url --query value -o tsv)
@@ -71,6 +71,8 @@ jobs:
           export DATABASE_URL
           npm ci
           npx prisma migrate deploy
+          npx prisma generate
+          npx tsx prisma/seed.ts
 
       - name: Close database firewall
         if: always()
