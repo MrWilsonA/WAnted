@@ -9,9 +9,9 @@ const caseFiles = [
         summary: "A short biodata of Wilson Arlando.",
         body: `## WANTED: Wilson Arlando
 
-**Preferred name:** Wilson
-**Major:** Computer Science and Mathematics
-**Current position:** Laboratory Assistant
+- **Preferred name:** Wilson
+- **Major:** Computer Science and Mathematics
+- **Current position:** Laboratory Assistant
 
 ## Current Responsibilities
 
@@ -20,7 +20,6 @@ Wilson is currently preparing a case for the Junior Laboratory Assistant 27-1 re
 ## Relevant Experience
 
 - Developed projects using different technology stacks.
-- Built and deployed this presentation, WAnted, to Microsoft Azure using Terraform, GitHub Actions, and Azure Container Apps.
 - Taught and guided university students.
 - Helped peers solve problems and improve their understanding.
 - Designed learning and assessment materials.
@@ -153,11 +152,14 @@ At the start of the semester, the target is to have everything needed for the ne
 
 ### Improve RIG Quality
 
-- Before the semester starts, related units such as R&D and Academic submit real problems, and assistants choose topics based on their interest.
-- Define a **definition of done** for each RIG type: development RIG must reach deployment or be installable, research RIG delivers a report, prototype, and recommendations.
-- Hold a mid-semester checkpoint with the guider and the future users.
-- Close the RIG with acceptance testing by the receiving unit, a handover checklist, and a warranty period of about 2 to 4 weeks for bugs within the original scope.
-- Add user acceptance and the definition of done to the Best RIG criteria, alongside voting.
+Strengthen the existing RIG phases instead of replacing them:
+
+- **Topic Submission:** encourage related units such as R&D, Academic, and daily operations to submit real problems. The submitter acts as the user and stays involved until handover. Assistants can still propose their own ideas, as long as the proposal names a clear user in SLC.
+- **Registration Phase:** every proposal states a **definition of done** based on its output type, approved by the guider. Tools and applications must run in an environment their users can access, with usage and maintenance documentation. VBL and learning materials must be ready to use and reviewed by their users. Exploratory research delivers a report, prototype, and recommendations.
+- **Setting Goals Phase:** targets and timelines are agreed with both the guider and the user, with a progress demo in the middle of the Research Phase.
+- **End of Research Phase:** the user performs acceptance testing before Presentation Submission. The guider's score considers the definition of done and can be one of the requirements to enter the Top 5.
+- **Top 5 and Best RIG:** voting remains, complemented by feedback from the users.
+- **New Handover Phase:** after the Best RIG Presentation, each group hands over its work, documentation, and known issues. All accounts, access, and credentials belong to SLC from the start. A warranty period of about 1 to 3 weeks covers issues within the original scope.
 
 ### Prepare Learning Support
 
@@ -168,7 +170,7 @@ At the start of the semester, the target is to have everything needed for the ne
 
 - Transparency rule and updated scoring templates for every field.
 - Revised Business Analysis case and pilot evaluation.
-- RIG definition of done, handover checklist, and warranty guideline.
+- RIG proposal guideline with definition of done, handover checklist, and warranty guideline.
 
 ## After Semester 2: Learning Support
 
@@ -216,9 +218,13 @@ Every requirement lists the evidence that must be shown before a score is given.
 
 Each component has a clear description of what scores 0 to 4 look like, instead of only "almost correct".
 
-### Live Assessment
+### Practical Tests and Concrete Questions
 
-Break-and-fix scenarios and concrete questions replace generic question lists.
+Short practical tests during the presentation (such as diagnosing a failing readiness check) and concrete questions replace generic question lists.
+
+### Core and Advanced Subtotals
+
+Requirements marked as Advanced are shown as a separate subtotal, so they can be used as the main consideration for Best TPA.
 
 ### Competency Result
 
@@ -367,7 +373,7 @@ Wilson's main strengths are his broad understanding of software development, his
 
 ## The Evidence Is Already on the Board
 
-- **WAnted itself.** This presentation is a full-stack application deployed to Microsoft Azure, with every resource written in Terraform, CI/CD with automated tests in GitHub Actions, secrets in Key Vault through managed identities, autoscaling from 2 to 5 replicas, and monitoring with alerts.
+- **WAnted itself.** This presentation is a full-stack application deployed to Microsoft Azure, with its infrastructure written in Terraform, CI/CD with automated tests in GitHub Actions, secrets in Key Vault through managed identities, autoscaling from 2 to 5 replicas, and monitoring with alerts.
 - **A load test, analysed and fixed.** The first k6 run (200 virtual users for 4 minutes) produced about 1.2% server errors. After analysing the cause (database connection limits), the second run reached 0% errors with a p95 of 381 ms, about 2.5 times the throughput.
 - **A case and scoring template.** The documentation for this project follows the TPA format and adds two-axis scoring, a gap flag, a verification column, and a rubric.
 - **A rule for AI use.** A transparency rule that scores understanding instead of trying to ban what cannot be detected.
